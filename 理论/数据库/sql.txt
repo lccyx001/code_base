@@ -1,0 +1,22 @@
+﻿事物：单个逻辑单元，执行的一系列操作，要么都执行要么都不执行
+
+ACID：A 原子性 C 一致性 I 隔离性 D 持久性
+
+SQL基础知识：
+
+SELECT select_list
+　　[ INTO new_table ]
+　　FROM table_source
+　　[ WHERE search_condition ]
+　　[ GROUP BY group_by_expression ]
+　　[ HAVING search_condition ]
+　　[ ORDER BY order_expression [ ASC | DESC ] ]
+
+SELECT 后 既有 表结构本身的字段，又有需要使用聚合函数（COUNT(),SUM(),MAX(),MIN(),AVG()等）的字段，就要用到group by分组，查询的限定条件里有需要用聚合函数计算的字段时也需要用分组
+
+
+在select指定的字段要么就要包含在Group By语句的后面，作为分组的依据；要么就要被包含在聚合函数中。
+select a,b,c,count(d) from A where a=9 group by a,b,c having count(d) > 10 order by b desc limit 10
+
+
+详细见：   https://www.cnblogs.com/jingfengling/p/5962182.html
