@@ -1,0 +1,53 @@
+# -*- coding: utf-8 -*-
+'''
+4.合并两个有序列表
+尾递归
+循环算法 
+'''
+
+l1 = [1,2,3,4,5,6]
+l2 = [3,4,5,6,7,8,9,10]
+
+def conbine(l1,l2,target=[]):
+    if not l1 or not l2:
+        target.extend(l1)
+        target.extend(l2)
+        return target
+    else:
+        if l1[0] > l2[0]:
+            target.append(l2[0])
+            del l2[0]
+        else:
+            target.append(l1[0])
+            del l1[0]
+        return conbine(l1, l2, target)
+
+target = conbine(l1, l2,[])
+print target
+
+
+def loop_merge_sort(l1, l2):
+    tmp = []
+    while len(l1) > 0 and len(l2) > 0:
+        if l1[0] < l2[0]:
+            tmp.append(l1[0])
+            del l1[0]
+        else:
+            tmp.append(l2[0])
+            del l2[0]
+    tmp.extend(l1)
+    tmp.extend(l2)
+    return tmp
+
+def merge_sortedlist(a,b):
+    c = []
+    while a and b:
+        if a[0] >= b[0]:
+            c.append(b.pop(0))
+        else:
+            c.append(a.pop(0))
+    while a:
+        c.append(a.pop(0))
+    while b:
+        c.append(b.pop(0))
+    return c

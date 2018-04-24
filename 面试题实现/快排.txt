@@ -1,0 +1,18 @@
+# -*- coding: utf-8 -*-
+def quick_sort(arr):
+    if len(arr)<2:#停止递归的条件
+        return arr
+    else:
+        mid = arr[0]
+        less = [i for i in arr[1:] if i <= mid]
+        great = [i for i in arr[1:] if i > mid]
+        sorted = quick_sort(less) + [mid] + quick_sort(great)
+        return sorted
+    
+arr = [7,2,5,67,9,3,5,7,10,24,255]
+
+print arr
+arr = quick_sort(arr)
+print arr
+                
+            

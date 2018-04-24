@@ -1,0 +1,114 @@
+Django的Model的继承有几种形式，分别是什么？
+	一、抽象继承：
+	class Animal(models.Model):
+	    name = models.CharField(max_length=50)
+	    age = models.PositiveIntegerField()
+
+	    # 下面这句决定了Animal是一个抽象类/Model
+	    class Meta:
+		abstract = True
+
+	class Human(Animal):
+	    kind_hearted = models.BooleanField()
+	    sex = models.CharField('sex', choices=(('m','male'), ('f', 'female')), max_length=1)
+	    #...
+	 Animal为抽象类
+	二、正常的继承，多重继承，Joined映射
+	和抽象继承的主要区别是父类这时也可以拥有数据库表了，并且不在身为存储公共信息的抽象类了，父类也可以进行实例化，查询等操作了。
+	class Country(models.Model):
+	    name = models.CharField(max_length=10)
+	    #...
+	 
+	class Province(Country):
+	    return = models.BooleanField()
+
+	三、代理
+	即在子类中只能增加方法，而不能增加属性，在不影响父类数据存储的前提下，使子类继承父类，此时子类称为父类的“代理”
+	from django.contrib.auth.models import User
+
+	class Person(User):
+	    # this makes a class proxy
+	    proxy = True
+
+	    def can_dance(self):
+		return True
+
+	# both Yellow and Black can_dance :)
+	class Yellow(Person):
+	    hometown = models.CharField(max_length=30)
+
+	class Black(Person)
+	    tribe_name = models.CharField(max_length=100)
+
+Django的Queryset是什么，objects是什么，objects在哪里可以定义。
+	$python manage.py shell
+	>>>from app.order.models import Order
+	>>>type(Order.objects)
+	<class 'django.db.models.models.manager.Manager'>
+	>>>
+	>>>order = Order.objects.all()
+	>>>type(order)
+	<class 'django.db.models.query.QuerySet'>
+	看继承关系去理解Queryset和objets。objects是每个Model默认的manager类，通过manager的方法(也可通过QuerySet的方法得到，当然QuerySet也来自于manager)，得到相应的Queryset，用以对数据库模型字段进行更多的操作。
+
+	objects(manager)方法可以自定义添加，也可以直接赋值覆盖掉默认的管理方法。
+
+	试着添加一个新的管理器的步骤是这样，首先定义一个manager类继承自models.Manager，并在其中对self进行操作，如下：
+	# new manager
+	class OrderManager(models.Manager):
+	    def title_count(self, keyword):
+		return self.filter(title__icontains=keyword).count()
+
+	class Order(models.Models):
+	    title = models.CharField(max_length=100)
+	    # ...
+	    #objects = models.Manager()
+	    objects = OrderManager()
+
+	    def __unicode__(self):
+		return self.title
+Django中查询queryset时什么情况下用Q?
+	例如需要进行复合条件的查询的SQL语句如下
+	SELECT * FROM order WHERE id BETWEEN 20 ADN 100 AND(num <= '20' or num >= '30');
+	from django.db.models import Q
+	from login.models import Order
+	#...
+	Order.objects.get(
+	Q(id >= 20) & (id <= 100),
+	Q(num <= 20) | (num >= 30)
+	)
+Django中想验证表单提交是否格式正确需要用到Form中的哪个函数？
+	is_valid()函数方法，用于检查表单提交是否正确。
+
+Django取消级联删除
+	user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+
+Django中如何在Model保存前做一定的固定操作，比如写一句日志？
+	利用Django的Model的Signal Dispatcher, 通过django.db.models.signals.pre_save()方法，在事件发生前，发射触发信号，这一切都被调度中的receiver方法深藏功与名的保存了。
+	信号的处理一般都写在Model中，举个例子：
+
+	import logging
+	from django.db import models
+	from django.db.models.signals import pre_save
+	from django.dispatch import receiver
+
+	class Order(models.Model):
+	    # ...
+
+	logger = logging.getLogger(__name__)
+
+	@receiver(pre_save, sender=Order)
+	def pre_save_handler(sender, **kwargs):
+
+	    # 我们可以在Order这个Model保存之前尽情调戏了：）
+	    logger.debug("{},{}".format(sender, **kwargs))
+	    print 'fuck universe'
+
+Django中如何读取和保存session，整个session的运行机制是什么。
+	机制：cookie 保存sessionid，session保存详细信息和状态
+	# 保存session
+	request.session['order_id'] = order_id
+	# 删除session
+	del request.session['order_id']
+	# 读取session
+	session.get('order_id', False)
