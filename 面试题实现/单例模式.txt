@@ -1,0 +1,61 @@
+﻿# -*- coding: utf-8 -*-
+'''
+单例模式的实现
+'''
+
+'''
+模块实现
+class SingleTon(object):
+    
+    def __init__(self):
+        pass
+    
+single = SingleTon()
+
+from . import single
+'''
+
+'''
+new 方法实现
+class SingleTon(object):
+    
+    def __new__(cls, *args, **kwargs):
+        if hasattr(cls, '_instance'):
+            return cls._instance
+        else:
+            orig = super(SingleTon,cls)#先实例化
+            cls._instance = orig.__new__(cls,*args,**kwargs)
+            return cls._instance
+'''
+
+'''
+ 共享属性 
+ 未调通
+ class SingleTon(object):
+    _instance = {}
+    def __new__(cls, *args, **kwargs):
+        ob = super(SingleTon,cls).__new__(cls,*args,**kwargs)
+        ob.__dict__ =cls._instance
+'''
+
+'''
+装饰器版本
+def singleTon(cls,*args,**kw):
+    instance = {}
+    def getInstance():
+        if cls not in instance:
+            instance[cls] = cls(*args,**kw)
+        return instance[cls]
+    return getInstance
+    
+@singleTon
+class A(object):
+    a = 1
+'''
+    
+
+instance1 = A()
+print instance1
+instance2 = A()
+print instance2
+        
