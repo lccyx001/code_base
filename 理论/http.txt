@@ -16,3 +16,7 @@ urllib和urllib2的区别
 	urllib2可以接受一个Request类的实例来设置URL请求的headers，urllib仅可以接受URL。这意味着，你不可以伪装你的User Agent字符串等。
 
 XSRF和XSS
+
+	XSS:跨站脚本攻击 在动态输出的地方添加脚本，执行攻击者的逻辑
+	XSRF:跨站请求伪造 攻击者伪造用户请求进行合法操作
+
