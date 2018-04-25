@@ -1,0 +1,11 @@
+***Django项目目录结构：***
+mysite/
+    manage.py  一个命令行工具，可以使你用多种方式对Django项目进行交互。
+    mysite/  目录是你的项目的真正的Python包
+        __init__.py  
+        settings.py  该Django 项目的设置/配置
+        urls.py  该Django项目的URL声明；你的Django站点的“目录”
+        wsgi.py  Web Server Gateway Interface 用于你的项目的与WSGI兼容的Web服务器入口（获取服务器，导入配置）
+
+***设置数据库***
+编辑mysite/settings.py
