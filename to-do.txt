@@ -1,0 +1,17 @@
+﻿linux操作系统
+
+5月13日之前 linux文件，目录与磁盘格式
+5月14日-5月20日shell shell script 与linux管理
+5月27日前 linux系统管理员
+
+计算机组成原理
+
+
+
+Tcp/IP Http 网络编程
+
+
+分布式系统设计
+
+
+机器学习
